@@ -1,21 +1,35 @@
 const User = require("../user/user.model");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const saltRounds = 10;
 
-module.exports.adduser = async (req, res) => {
+module.exports.addUser = async (req, res) => {
   const { name, email, password } = req.body;
+
   try {
-    const emailvalid = await User.findOne({ email });
-    if (emailvalid) {
-      return res.status(500).json({ message: "Email alrady use in" });
+    // Check if the email is already in use
+    const emailValid = await User.findOne({ email });
+
+    if (emailValid) {
+      return res.status(400).json({ message: 'Email already in use' });
     }
 
-    const user = new User({ name, email, password });
-    const newuser = await user.save();
-    res.json({ message: "user add secussflly", newuser });
+    // Hash the password using bcrypt
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Create a new user with the hashed password
+    const user = new User({ name, email, password: hashedPassword });
+
+    // Save the user to the database
+    const newUser = await user.save();
+
+    res.json({ message: 'User added successfully', newUser });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "server error" });
+    res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 
@@ -27,10 +41,19 @@ module.exports.login = async (req, res) => {
       console.log('Email is not found');
       return res.status(404).json({ message: 'Email not found' });
     }
-    if (user.password !== req.body.password) {
+
+    // Compare the hashed password using bcrypt
+    const isPasswordMatch = await bcrypt.compare(req.body.password, user.password);
+
+    if (!isPasswordMatch) {
       return res.status(401).json({ message: 'Incorrect password' });
     }
-    res.status(200).json({ message: 'Login successfully' });
+// If the password is valid, create a JWT token
+const token = jwt.sign({ id: user._id }, "C7766321BB4EBB18", { expiresIn: "1h" });
+
+// Set the JWT token as an HTTP-only cookie
+res.cookie("jwt", token, { httpOnly: true });
+    res.status(200).json({ message: 'Login successfully' , token});
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Server error' });
