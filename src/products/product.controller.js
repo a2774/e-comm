@@ -1,20 +1,40 @@
 const Product = require("../products/product.module");
+const productRepository = require('../products/product.repository');
+// module.exports.addproduct = async (req, res) => {
+//   const {
+//     name,
+//     description,
+//     price,
+//     category,
+//     brand,
+//     stock,
+//     imageUrl,
+//     createdAt,
+//     updatedAt,
+//   } = req.body;
 
-module.exports.addproduct = async (req, res) => {
-  const {
-    name,
-    description,
-    price,
-    category,
-    brand,
-    stock,
-    imageUrl,
-    createdAt,
-    updatedAt,
-  } = req.body;
+//   try {
+//     const product = new Product({
+//       name,
+//       description,
+//       price,
+//       category,
+//       brand,
+//       stock,
+//       imageUrl,
+//       createdAt,
+//       updatedAt,
+//     });
+//     const newproduct = await product.save();
+//     res.status(200).json({ message: "product add secusssfully", newproduct });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error: "sever error" });
+//   }
+// };
 
-  try {
-    const product = new Product({
+module.exports.addProduct = async (req, res) => {
+    const {
       name,
       description,
       price,
@@ -24,14 +44,35 @@ module.exports.addproduct = async (req, res) => {
       imageUrl,
       createdAt,
       updatedAt,
-    });
-    const newproduct = await product.save();
-    res.status(200).json({ message: "product add secusssfully", newproduct });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "sever error" });
-  }
-};
+    } = req.body;
+  
+    try {
+      const productData = {
+        name,
+        description,
+        price,
+        category,
+        brand,
+        stock,
+        imageUrl,
+        createdAt,
+        updatedAt,
+      };
+  
+      const newProduct = await productRepository.addProduct(productData);
+  
+      res.status(200).json({ message: "Product added successfully", newProduct });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Server error" });
+    }
+  };
+
+
+
+
+
+
 
 // Update an existing product
 
