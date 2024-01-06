@@ -4,9 +4,11 @@ const app = express();
 
 const db = require('./config/dbconnection');
 
-const router = require('./src/user/user.routers')
+const userrouter = require('./src/user/user.routers')
+const productrouter = require('./src/products/product.router');
 app.use(express.json());
-app.use('/api/user', router);
+app.use('/api/user', userrouter);
+app.use('/product', productrouter);
 
 
 
