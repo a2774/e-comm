@@ -7,7 +7,6 @@ module.exports.addUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    // Check if the email is already in use
     const emailValid = await User.findOne({ email });
 
     if (emailValid) {
@@ -17,10 +16,8 @@ module.exports.addUser = async (req, res) => {
     // Hash the password using bcrypt
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Create a new user with the hashed password
     const user = new User({ name, email, password: hashedPassword });
 
-    // Save the user to the database
     const newUser = await user.save();
 
     res.json({ message: "User added successfully", newUser });
