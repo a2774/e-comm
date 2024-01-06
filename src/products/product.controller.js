@@ -76,60 +76,131 @@ module.exports.addProduct = async (req, res) => {
 
 // Update an existing product
 
-module.exports.update = async (req, res) => {
+// module.exports.update = async (req, res) => {
+//   try {
+//     const product = await Product.findById(req.params.id);
+//     if (!product) {
+//       return res.status(404).json({ error: "product is not Available" });
+//     }
+//     product.set(req.body);
+//     const newproduct = await product.save();
+//     res.json(newproduct);
+//   } catch (err) {
+//     res.status(500).json("Error" + err);
+//   }
+// };
+
+// const productRepository = require('../repositories/productRepository');
+
+module.exports.updateProduct = async (req, res) => {
+  const productId = req.params.id;
+  const newData = req.body;
+
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await productRepository.getProductById(productId);
+
     if (!product) {
-      return res.status(404).json({ error: "product is not Available" });
+      return res.status(404).json({ error: "Product is not available" });
     }
-    product.set(req.body);
-    const newproduct = await product.save();
-    res.json(newproduct);
-  } catch (err) {
-    res.status(500).json("Error" + err);
+
+    const updatedProduct = await productRepository.updateProduct(productId, newData);
+
+    if (!updatedProduct) {
+      return res.status(500).json({ error: "Failed to update product" });
+    }
+
+    res.json(updatedProduct);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
+
 // Delete a product
 
-module.exports.delete = async(req, res)=>{
-    try {
-        const product = await Product.findByIdAndDelete(req.params.id);
-        if(!product){
-            res.status(401).json({message:"product is Available"})
-        }
-        res.status(200).json({message:"product Deleted", product});
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({error:"sever error"});
-    }
-}
+// module.exports.delete = async(req, res)=>{
+//     try {
+//         const product = await Product.findByIdAndDelete(req.params.id);
+//         if(!product){
+//             res.status(401).json({message:"product is Available"})
+//         }
+//         res.status(200).json({message:"product Deleted", product});
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({error:"sever error"});
+//     }
+// }
 
+
+module.exports.deleteProduct = async (req, res) => {
+    const productId = req.params.id;
+  
+    try {
+      const product = await productRepository.deleteProductById(productId);
+  
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+  
+      res.status(200).json({ message: "Product deleted successfully", product });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Server error" });
+    }
+  };
 
 // View details of a specific product
 
 
-module.exports.getproduct = async(req, res)=>{
+// module.exports.getproduct = async(req, res)=>{
+//     try {
+//         const product = await Product.findById(req.params.id);
+//         if(!product){
+//           return  res.status(404).json({message:"product is not Available"});
+//         }
+//         res.status(200).json({message:"View product", product});
+//     } catch (error) {
+//         console.log('error');
+//         res.status(500).json({error:"sever error"});
+//     }
+// }
+
+
+module.exports.getProduct = async (req, res) => {
+    const productId = req.params.id;
+  
     try {
-        const product = await Product.findById(req.params.id);
-        if(!product){
-          return  res.status(404).json({message:"product is not Available"});
-        }
-        res.status(200).json({message:"View product", product});
+      const product = await productRepository.getProductById(productId);
+  
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+  
+      res.status(200).json({ message: "View product", product });
     } catch (error) {
-        console.log('error');
-        res.status(500).json({error:"sever error"});
+      console.log(error);
+      res.status(500).json({ error: "Server error" });
     }
-}
+  };
 
 
+// module.exports.getallproduct = async(req, res)=>{
+//     try {
+//         const product = await Product.find();
+//         res.status(200).json({message:"view all product", product});
+//     } catch (error) {
+//        console.log(error);
+//        res.status(500).json({error:"sever error"}); 
+//     }
+// }
 
-module.exports.getallproduct = async(req, res)=>{
+module.exports.getAllProducts = async (req, res) => {
     try {
-        const product = await Product.find();
-        res.status(200).json({message:"view all product", product});
+      const products = await productRepository.getAllProducts();
+      res.status(200).json({ message: "View all products", products });
     } catch (error) {
-       console.log(error);
-       res.status(500).json({error:"sever error"}); 
+      console.log(error);
+      res.status(500).json({ error: "Server error" });
     }
-}
+  };
