@@ -5,16 +5,16 @@ Update an existing product  DONE
 Delete a product  = DONE
 View details of a specific product  = DONE
 View a list of all products  = DONE
-Filter and sort products based on different criteria (e.g., category, price)
+Filter and sort products based on different criteria (e.g., category, price)  DONE
 User Authentication:
 2
 User registration
-User login
-User logout
+User login  =  DONE
+User logout = DONE
 Password reset
-Shopping Cart:
+Shopping Cart:  = DONE
 3
-Add a product to the shopping cart
+Add a product to the shopping cart = DONE
 Update the quantity of a product in the cart
 Remove a product from the cart
 View the contents of the shopping cart

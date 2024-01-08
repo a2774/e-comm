@@ -1,4 +1,4 @@
-const Product = require('../products/product.module');
+const Product = require("../products/product.module");
 
 class ProductRepository {
   async addProduct(productData) {
@@ -54,7 +54,30 @@ class ProductRepository {
       throw error;
     }
   }
+  async getProducts({ category, minPrice, maxPrice, sortBy, sortOrder }) {
+    try {
+      let query = {};
 
+      if (category) {
+        query.category = category;
+      }
+
+      if (minPrice || maxPrice) {
+        query.price = {};
+        if (minPrice) query.price.$gte = minPrice;
+        if (maxPrice) query.price.$lte = maxPrice;
+      }
+
+      let sort = {};
+      if (sortBy) {
+        sort[sortBy] = sortOrder === "desc" ? -1 : 1;
+      }
+
+      return await Product.find(query).sort(sort);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = new ProductRepository();

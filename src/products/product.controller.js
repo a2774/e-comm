@@ -1,5 +1,8 @@
 const Product = require("../products/product.module");
 const productRepository = require('../products/product.repository');
+
+
+
 // module.exports.addproduct = async (req, res) => {
 //   const {
 //     name,
@@ -32,6 +35,16 @@ const productRepository = require('../products/product.repository');
 //     res.status(500).json({ error: "sever error" });
 //   }
 // };
+
+
+
+
+
+
+
+
+
+
 
 module.exports.addProduct = async (req, res) => {
     const {
@@ -199,6 +212,26 @@ module.exports.getAllProducts = async (req, res) => {
     try {
       const products = await productRepository.getAllProducts();
       res.status(200).json({ message: "View all products", products });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Server error" });
+    }
+  };
+//   Filter and sort products based on different criteria (e.g., category, price) 
+
+  module.exports.getFilteredAndSortedProducts = async (req, res) => {
+    const { category, minPrice, maxPrice, sortBy, sortOrder } = req.query;
+  
+    try {
+      const products = await productRepository.getProducts({
+        category,
+        minPrice,
+        maxPrice,
+        sortBy,
+        sortOrder,
+      });
+  
+      res.status(200).json({ message: "View filtered and sorted products", products });
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: "Server error" });
