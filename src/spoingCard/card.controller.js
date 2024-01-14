@@ -51,3 +51,16 @@ module.exports.viewAllProducts = async (req, res) => {
     res.status(500).json({error:"server is error"});
   }
   };
+
+  module.exports.deleteditem = async(req, res)=>{
+    try {
+        const product = await CartItem.findByIdAndDelete(req.params.id);
+        if(!product){
+            return res.status(404).json({message:"prduct is not find"});
+        }
+      res.status(200).json({message:"produc delete secussfully"});
+    } catch (error) {
+        console.log(error);
+        res.status(200).json({error:"sever error"});
+    }
+  }

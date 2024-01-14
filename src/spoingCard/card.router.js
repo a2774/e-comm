@@ -6,6 +6,7 @@ router.post('/addcard', cardcontroller.addToCart)
 router.get('/viewitem', cardcontroller.viewAllProducts);
 router.get('/allviewproduct', cardcontroller.countAllProducts);
 router.post('/updateitem/:id', cardcontroller.updateCartItemQuantity);
+router.get('/deleteitem/:id', cardcontroller.deleteditem);
 
 
 module.exports = router;
